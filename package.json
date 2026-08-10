@@ -1,0 +1,46 @@
+{
+  "name": "clipspeed-mcp",
+  "version": "1.0.1",
+  "description": "ClipSpeed MCP server \u2014 turn any video into ready-to-post vertical clips from Claude, Cursor, Cline, or Windsurf. Wraps the ClipSpeed public API with your personal key.",
+  "keywords": [
+    "clipspeed",
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "video",
+    "clips",
+    "shorts",
+    "captions",
+    "ai"
+  ],
+  "homepage": "https://www.clipspeed.ai/developers/",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "clipspeed-mcp": "./bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "SKILL.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node test/smoke.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thestockgoatballs/clipspeed-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thestockgoatballs/clipspeed-mcp/issues"
+  }
+}
