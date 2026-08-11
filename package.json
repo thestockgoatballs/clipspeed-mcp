@@ -1,7 +1,7 @@
 {
   "name": "clipspeed-mcp",
   "version": "1.0.1",
-  "description": "ClipSpeed MCP server — turn any video into ready-to-post vertical clips from Claude, Cursor, Cline, or Windsurf. Wraps the ClipSpeed public API with your personal key.",
+  "description": "ClipSpeed MCP server \u2014 turn any video into ready-to-post vertical clips from Claude, Cursor, Cline, or Windsurf. Wraps the ClipSpeed public API with your personal key.",
   "keywords": [
     "clipspeed",
     "mcp",
@@ -42,5 +42,6 @@
   },
   "bugs": {
     "url": "https://github.com/thestockgoatballs/clipspeed-mcp/issues"
-  }
+  },
+  "mcpName": "io.github.thestockgoatballs/clipspeed-mcp"
 }

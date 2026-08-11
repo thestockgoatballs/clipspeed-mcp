@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "ai.clipspeed/clipspeed",
-  "description": "Turn any video or livestream into scored, captioned, ready-to-post vertical clips — from inside Claude, Cursor, Cline or Windsurf.",
+  "name": "io.github.thestockgoatballs/clipspeed-mcp",
+  "description": "Turn any video or livestream into scored, captioned, ready-to-post vertical clips \u2014 from inside Claude, Cursor, Cline or Windsurf.",
   "version": "1.0.1",
   "repository": {
     "url": "https://github.com/thestockgoatballs/clipspeed-mcp",
@@ -13,7 +13,9 @@
       "registryType": "npm",
       "identifier": "clipspeed-mcp",
       "version": "1.0.1",
-      "transport": { "type": "stdio" },
+      "transport": {
+        "type": "stdio"
+      },
       "environmentVariables": [
         {
           "name": "CLIPSPEED_API_KEY",
