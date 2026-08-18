@@ -1,8 +1,8 @@
 # clipspeed-mcp
 
-Turn any video into scored, captioned, ready-to-post vertical clips — right inside **Claude**, **Cursor**, **Cline**, or **Windsurf**. `clipspeed-mcp` is a stdio [MCP](https://modelcontextprotocol.io) server that wraps the [ClipSpeed](https://www.clipspeed.ai) public API with your **personal API key**, and (unlike a hosted MCP) can **download the finished .mp4 clips straight to your `~/Downloads` folder**.
+Turn any video into scored, captioned, ready-to-post vertical clips — right inside **Claude**, **Cursor**, **Cline**, or **Windsurf**. `clipspeed-mcp` is a stdio [MCP](https://modelcontextprotocol.io) server that wraps the [ClipSpeedAI](https://www.clipspeed.ai) public API with your **personal API key**, and (unlike a hosted MCP) can **download the finished .mp4 clips straight to your `~/Downloads` folder**.
 
-Requires a ClipSpeed **paid plan or the $1 trial**. Get your key at **https://www.clipspeed.ai/dashboard/api-key/** — keys look like `csai_live_...`.
+Requires a ClipSpeedAI **paid plan or the $1 trial**. Get your key at **https://www.clipspeed.ai/dashboard/api-key/** — keys look like `csai_live_...`.
 
 > **Always pin `clipspeed-mcp@1.0.1`.** Pinning keeps a bad publish from silently upgrading your setup.
 
@@ -49,7 +49,7 @@ Add this to your MCP servers config (`~/.cursor/mcp.json`, Cline's MCP settings,
 
 ### Hosted (no install)
 
-Prefer a remote server with no local process? ClipSpeed also exposes a hosted MCP:
+Prefer a remote server with no local process? ClipSpeedAI also exposes a hosted MCP:
 
 ```bash
 claude mcp add --transport http clipspeed https://api.clipspeed.ai/mcp \
@@ -80,7 +80,7 @@ Node **>= 18** (uses global `fetch`).
 | `list_clips` | List your recent clip jobs to find a past `job_id`. |
 | `download_clip` | **Save the .mp4 files to `~/Downloads`** — all clips, or one by `clip_index`. Skips files > 500MB. |
 | `get_usage` | Credits remaining / total / used this month, plan, trial status. |
-| `discover_trending` | Find the fastest-growing recent video in a niche to clip. ClipSpeed's differentiator. |
+| `discover_trending` | Find the fastest-growing recent video in a niche to clip. ClipSpeedAI's differentiator. |
 | `schedule_post` | Schedule a finished clip to tiktok / youtube / instagram / x / linkedin. |
 | `list_scheduled_posts` | Review scheduled / posted / failed posts. |
 | `cancel_scheduled_post` | Cancel a post that's still `scheduled`. |
@@ -89,7 +89,7 @@ Node **>= 18** (uses global `fetch`).
 **Caption styles:** `karaoke` (default), `hormozi`, `beasty`, `fire`, `youshaei`, `cinematic`, `bold`.
 **Aspect ratios:** `9:16` (default), `1:1`, `16:9`.
 
-To let ClipSpeed **publish to your socials**, connect each platform in the ClipSpeed app first (Scheduler). `schedule_post` posts under those connections.
+To let ClipSpeedAI **publish to your socials**, connect each platform in the ClipSpeedAI app first (Scheduler). `schedule_post` posts under those connections.
 
 ---
 
@@ -107,7 +107,7 @@ A Claude **Skill** (`SKILL.md`) ships with this package — it teaches the outco
 
 - Your API key is **never logged**. It only ever lands in your MCP client's config file (or your shell env).
 - **Never commit your key** or share it. Rotate it any time at https://www.clipspeed.ai/dashboard/api-key/.
-- Keys are tied to one account, rate-limited per plan, and hashed at rest on ClipSpeed's servers.
+- Keys are tied to one account, rate-limited per plan, and hashed at rest on ClipSpeedAI's servers.
 
 ## License
 
