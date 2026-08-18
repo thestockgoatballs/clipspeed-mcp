@@ -67,9 +67,16 @@ jobs:
           curl -fsS "https://registry.modelcontextprotocol.io/v0/servers?search=clipspeed" -o served.json
           node -e '
             const j = require("./served.json");
-            const s = (j.servers || []).map(x => x.server)
-              .find(x => x && x.name === "io.github.thestockgoatballs/clipspeed-mcp");
-            if (!s) throw new Error("server not found in registry response");
+            // The search endpoint returns EVERY published version, oldest first.
+            // Matching on name alone grabs a stale record and then reports that
+            // stale record faithfully — which is how this check failed its first
+            // run against a registry that was already correct. Key on isLatest.
+            const rec = (j.servers || []).find(x =>
+              x.server && x.server.name === "io.github.thestockgoatballs/clipspeed-mcp" &&
+              x._meta && x._meta["io.modelcontextprotocol.registry/official"] &&
+              x._meta["io.modelcontextprotocol.registry/official"].isLatest === true);
+            if (!rec) throw new Error("no isLatest record for the server in registry response");
+            const s = rec.server;
             const r = (s.remotes || []).find(r => r.url === "https://api.clipspeed.ai/mcp");
             if (!r) throw new Error("published entry has no remotes[] for api.clipspeed.ai/mcp");
             if (r.type !== "streamable-http") throw new Error("unexpected transport: " + r.type);
