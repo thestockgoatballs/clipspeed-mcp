@@ -1,0 +1,77 @@
+name: Publish to MCP Registry
+
+# Publishes server.json to the official MCP registry.
+#
+# Auth is GitHub OIDC: the workflow proves it runs in
+# github.com/thestockgoatballs/clipspeed-mcp, which is what entitles it to the
+# io.github.thestockgoatballs/* namespace. No secret, no PAT, no device code,
+# nothing to expire — the interactive `mcp-publisher login github` token lasts
+# minutes and had already expired once by the time we needed it.
+#
+# This does NOT publish to npm. Publishing the package is a separate, deliberate
+# act; wiring it in here would mean a registry metadata change could ship a new
+# artifact to users as a side effect. Keep the blast radius to the registry.
+#
+# Every step is a hard gate. No `if: always()` anywhere — a green run must mean
+# each step actually succeeded, not that it was allowed to fail quietly.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # required for OIDC
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "lts/*"
+
+      - name: Install dependencies
+        run: npm ci
+
+      # A real gate. If the server is broken, the listing does not move.
+      - name: Run tests
+        run: npm test
+
+      - name: Install mcp-publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+
+      # Validate before authenticating, so a malformed server.json fails on its
+      # own terms rather than as a confusing auth-time error.
+      - name: Validate server.json
+        run: ./mcp-publisher validate
+
+      - name: Authenticate to MCP Registry
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish server to MCP Registry
+        run: ./mcp-publisher publish
+
+      # Assert the registry actually serves what we just claimed to publish.
+      # A publish command that exits 0 is a claim; the served entry is the fact.
+      - name: Verify the published entry declares the remote endpoint
+        run: |
+          set -euo pipefail
+          sleep 5
+          curl -fsS "https://registry.modelcontextprotocol.io/v0/servers?search=clipspeed" -o served.json
+          node -e '
+            const j = require("./served.json");
+            const s = (j.servers || []).map(x => x.server)
+              .find(x => x && x.name === "io.github.thestockgoatballs/clipspeed-mcp");
+            if (!s) throw new Error("server not found in registry response");
+            const r = (s.remotes || []).find(r => r.url === "https://api.clipspeed.ai/mcp");
+            if (!r) throw new Error("published entry has no remotes[] for api.clipspeed.ai/mcp");
+            if (r.type !== "streamable-http") throw new Error("unexpected transport: " + r.type);
+            console.log("verified: version " + s.version + ", remote " + r.type + " " + r.url);
+          '
