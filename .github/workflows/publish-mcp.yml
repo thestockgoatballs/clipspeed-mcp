@@ -55,8 +55,34 @@ jobs:
       - name: Authenticate to MCP Registry
         run: ./mcp-publisher login github-oidc
 
+      # The registry refuses a duplicate version (400, "cannot publish duplicate
+      # version"), so a plain `publish` can only ever succeed once and every
+      # re-run of an unchanged server.json fails. Skip the call only when the
+      # registry ALREADY serves this exact version — that publish would be a
+      # no-op, so not making it changes nothing.
+      #
+      # This is not `|| true`. A publish that is actually attempted and fails
+      # still fails the job, and the verify step below runs unconditionally in
+      # both paths, so "skipped" can never stand in for "verified".
       - name: Publish server to MCP Registry
-        run: ./mcp-publisher publish
+        run: |
+          set -euo pipefail
+          WANT="$(node -p 'require("./server.json").version')"
+          curl -fsS "https://registry.modelcontextprotocol.io/v0/servers?search=clipspeed" -o before.json
+          if node -e '
+                const j = require("./before.json");
+                const want = process.argv[1];
+                const hit = (j.servers || []).some(x =>
+                  x.server &&
+                  x.server.name === "io.github.thestockgoatballs/clipspeed-mcp" &&
+                  x.server.version === want);
+                process.exit(hit ? 0 : 1);
+              ' "$WANT"; then
+            echo "Registry already serves version $WANT — skipping publish, proceeding to verify."
+          else
+            echo "Version $WANT not yet in the registry — publishing."
+            ./mcp-publisher publish
+          fi
 
       # Assert the registry actually serves what we just claimed to publish.
       # A publish command that exits 0 is a claim; the served entry is the fact.
