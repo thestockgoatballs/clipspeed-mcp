@@ -1,8 +1,24 @@
 # clipspeed-mcp
 
-Turn any video into scored, captioned, ready-to-post vertical clips — right inside **Claude**, **Cursor**, **Cline**, or **Windsurf**. `clipspeed-mcp` is a stdio [MCP](https://modelcontextprotocol.io) server that wraps the [ClipSpeedAI](https://www.clipspeed.ai) public API with your **personal API key**, and (unlike a hosted MCP) can **download the finished .mp4 clips straight to your `~/Downloads` folder**.
+Turn any video **or live stream** into scored, captioned, ready-to-post vertical clips — right inside **Claude**, **Cursor**, **Cline**, or **Windsurf**.
 
-Requires a ClipSpeedAI **paid plan or the $1 trial**. Get your key at **https://www.clipspeed.ai/dashboard/api-key/** — keys look like `csai_live_...`.
+[ClipSpeedAI](https://www.clipspeed.ai) ships **two MCP transports**, and they expose **different tools**:
+
+| | Hosted (remote) | This npm package (local) |
+|---|---|---|
+| Transport | `streamable-http` at `https://api.clipspeed.ai/mcp` | stdio |
+| Auth | **OAuth — one click, no API key** | `CLIPSPEED_API_KEY` |
+| Install | none | `npx clipspeed-mcp` |
+| **Clip a LIVE stream while it airs** | **yes** — `clip_livestream`, `check_livestream`, `extend_livestream`, `stop_livestream` | **no** |
+| Save .mp4s to your disk | no | **yes** — `download_clip` |
+| Schedule posts | via `publish_to_youtube` | `schedule_post` (5 platforms) |
+
+**Most people want the hosted server** — it needs no install, no API key, and it is the only one
+that can clip a stream that is still running. Use this npm package when you specifically need
+finished files written to your local disk.
+
+Requires a ClipSpeedAI **paid plan or the $1 trial**. For the npm package, get your key at
+**https://www.clipspeed.ai/dashboard/api-key/** — keys look like `csai_live_...`.
 
 > **Always pin `clipspeed-mcp@1.0.1`.** Pinning keeps a bad publish from silently upgrading your setup.
 
@@ -47,16 +63,35 @@ Add this to your MCP servers config (`~/.cursor/mcp.json`, Cline's MCP settings,
 }
 ```
 
-### Hosted (no install)
+### Hosted (no install, no API key) — recommended
 
-Prefer a remote server with no local process? ClipSpeedAI also exposes a hosted MCP:
+The hosted server authenticates with **OAuth**, so there is no key to copy and nothing to install:
 
 ```bash
-claude mcp add --transport http clipspeed https://api.clipspeed.ai/mcp \
-  --header "Authorization: Bearer csai_live_your_key"
+claude mcp add --transport http clipspeed https://api.clipspeed.ai/mcp
 ```
 
-The hosted server can do everything **except** write files to your disk — use this local package if you want `download_clip`.
+Your client opens a browser once, you approve, and it is connected. In **claude.ai** or
+**ChatGPT**, add it as a custom connector with the same URL.
+
+**Hosted tools** (10):
+
+| Tool | Does |
+|---|---|
+| `submit_to_clipspeed` | Video URL → a clip job. |
+| `check_clips` | Poll a job → finished clips with viral scores. |
+| **`clip_livestream`** | **Attach to a stream that is STILL LIVE and cut clips while it airs.** |
+| **`check_livestream`** | Clips produced so far from a live session. |
+| **`extend_livestream`** | Keep clipping past the original window. |
+| **`stop_livestream`** | End the live session. |
+| `discover_trending` | Fastest-growing recent video in a niche. |
+| `list_templates` | Available caption/layout templates. |
+| `creator_pack` | Titles, hooks and hashtags for a finished clip. |
+| `publish_to_youtube` | Publish a finished clip to YouTube. |
+
+The four livestream tools exist **only** on the hosted server. If you want to clip a Twitch,
+Kick or YouTube stream while it is running, use the hosted transport — the npm package cannot
+do it. Conversely, only the npm package can write .mp4 files to your local disk.
 
 ---
 
@@ -71,7 +106,10 @@ Node **>= 18** (uses global `fetch`).
 
 ---
 
-## Tools
+## Tools (npm package / local stdio)
+
+These are the tools **this package** exposes. For the hosted server's tool set — including the
+four livestream tools — see [Hosted](#hosted-no-install-no-api-key--recommended) above.
 
 | Tool | Does |
 |---|---|
