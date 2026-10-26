@@ -1,6 +1,6 @@
 # clipspeed-mcp
 
-Turn any video **or live stream** into scored, captioned, ready-to-post vertical clips — right inside **Claude**, **Cursor**, **Cline**, or **Windsurf**.
+Create and clip video from **Claude**, **ChatGPT**, **Cursor**, **Cline** or **Windsurf**: generate AI videos (Seedance 2.5, Kling 3.0, Veo 3.1, MiniMax H3) and images (Nano Banana Pro, GPT Image 2), build consistent AI influencer characters, swap a character into a clip with its original motion and sound (Morphaze), and turn any video **or live stream** into scored, captioned, ready-to-post vertical clips.
 
 [ClipSpeedAI](https://www.clipspeed.ai) ships **two MCP transports**, and they expose **different tools**:
 
@@ -9,12 +9,13 @@ Turn any video **or live stream** into scored, captioned, ready-to-post vertical
 | Transport | `streamable-http` at `https://api.clipspeed.ai/mcp` | stdio |
 | Auth | **OAuth — one click, no API key** | `CLIPSPEED_API_KEY` |
 | Install | none | `npx clipspeed-mcp` |
+| **AI video, images, AI influencers, Morphaze swaps, ad concepts** | **yes** — `generate_video`, `generate_image`, `create_influencer`, `morphaze_swap`, `marketing_concept_video`, `estimate_cost` (credits shown before every paid run) | **no** |
 | **Clip a LIVE stream while it airs** | **yes** — `clip_livestream`, `check_livestream`, `extend_livestream`, `stop_livestream` | **no** |
 | Save .mp4s to your disk | no | **yes** — `download_clip` |
 | Schedule posts | via `publish_to_youtube` | `schedule_post` (5 platforms) |
 
 **Most people want the hosted server** — it needs no install, no API key, and it is the only one
-that can clip a stream that is still running. Use this npm package when you specifically need
+that can generate AI video and images or clip a stream that is still running. Use this npm package when you specifically need
 finished files written to your local disk.
 
 Requires a ClipSpeedAI **paid plan or the $1 trial**. For the npm package, get your key at
