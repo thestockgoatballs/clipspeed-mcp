@@ -1,5 +1,7 @@
 # clipspeed-mcp
 
+[![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/thestockgoatballs/clipspeed-mcp)
+
 Create and clip video from **Claude**, **ChatGPT**, **Cursor**, **Cline** or **Windsurf**: generate AI videos (Seedance 2.5, Kling 3.0, Veo 3.1, MiniMax H3) and images (Nano Banana Pro, GPT Image 2), build consistent AI influencer characters, swap a character into a clip with its original motion and sound (Morphaze), and turn any video **or live stream** into scored, captioned, ready-to-post vertical clips.
 
 [ClipSpeedAI](https://www.clipspeed.ai) ships **two MCP transports**, and they expose **different tools**:
